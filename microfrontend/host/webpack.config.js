@@ -60,6 +60,7 @@ module.exports = {
       filename: "remoteEntry.js",
       remotes: {
         users: "users@http://localhost:8081/remoteEntry.js",
+        gallery: "gallery@http://localhost:8082/remoteEntry.js",
       },
       exposes: {},
       shared: {

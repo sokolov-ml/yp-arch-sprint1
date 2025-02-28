@@ -10,6 +10,26 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import * as auth from "../utils/auth.js";
 import api from "../utils/api";
 
+import InfoTooltip from "./InfoTooltip";
+import PopupWithForm from "./PopupWithForm";
+
+// import from users
+// import Register from "./Register";
+const Register = lazy(() =>
+  import("users/Register").catch(() => {
+    return {
+      default: () => <div className="error">Component is not available!</div>,
+    };
+  })
+);
+// import Login from "./Login";
+const Login = lazy(() =>
+  import("users/Login").catch(() => {
+    return {
+      default: () => <div className="error">Component is not available!</div>,
+    };
+  })
+);
 // import EditProfilePopup from "./EditProfilePopup";
 const EditProfilePopup = lazy(() =>
   import("users/EditProfilePopup").catch(() => {
@@ -27,22 +47,26 @@ const EditAvatarPopup = lazy(() =>
   })
 );
 
-import InfoTooltip from "./InfoTooltip";
-import PopupWithForm from "./PopupWithForm";
-import ImagePopup from "./ImagePopup";
-import AddPlacePopup from "./AddPlacePopup";
-// import Register from "./Register";
-const Register = lazy(() =>
-  import("users/Register").catch(() => {
+//import from gallery
+// import ImagePopup from "./ImagePopup";
+const ImagePopup = lazy(() =>
+  import("gallery/ImagePopup").catch(() => {
     return {
       default: () => <div className="error">Component is not available!</div>,
     };
   })
 );
-
-// import Login from "./Login";
-const Login = lazy(() =>
-  import("users/Login").catch(() => {
+// import AddPlacePopup from "./AddPlacePopup";
+const AddPlacePopup = lazy(() =>
+  import("gallery/AddPlacePopup").catch(() => {
+    return {
+      default: () => <div className="error">Component is not available!</div>,
+    };
+  })
+);
+// import Card from './Card';
+const Card = lazy(() =>
+  import("gallery/Card").catch(() => {
     return {
       default: () => <div className="error">Component is not available!</div>,
     };
