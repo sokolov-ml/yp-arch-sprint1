@@ -13,6 +13,7 @@ module.exports = {
 
   devServer: {
     port: 8080,
+    historyApiFallback: true,
   },
 
   module: {
@@ -57,7 +58,9 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "host",
       filename: "remoteEntry.js",
-      remotes: {},
+      remotes: {
+        users: "users@http://localhost:8081/remoteEntry.js",
+      },
       exposes: {},
       shared: {
         ...deps,

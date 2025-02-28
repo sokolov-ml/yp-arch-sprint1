@@ -1,20 +1,53 @@
 import React, { lazy, Suspense, useState, useEffect } from "react";
 import { Route, useHistory, Switch } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
+
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import * as auth from "../utils/auth.js";
+import api from "../utils/api";
+
+// import EditProfilePopup from "./EditProfilePopup";
+const EditProfilePopup = lazy(() =>
+  import("users/EditProfilePopup").catch(() => {
+    return {
+      default: () => <div className="error">Component is not available!</div>,
+    };
+  })
+);
+// import EditAvatarPopup from "./EditAvatarPopup";
+const EditAvatarPopup = lazy(() =>
+  import("users/EditAvatarPopup").catch(() => {
+    return {
+      default: () => <div className="error">Component is not available!</div>,
+    };
+  })
+);
+
+import InfoTooltip from "./InfoTooltip";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
-import api from "../utils/api";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import EditProfilePopup from "./EditProfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import Register from "./Register";
-import Login from "./Login";
-import InfoTooltip from "./InfoTooltip";
-import ProtectedRoute from "./ProtectedRoute";
-import * as auth from "../utils/auth.js";
+// import Register from "./Register";
+const Register = lazy(() =>
+  import("users/Register").catch(() => {
+    return {
+      default: () => <div className="error">Component is not available!</div>,
+    };
+  })
+);
+
+// import Login from "./Login";
+const Login = lazy(() =>
+  import("users/Login").catch(() => {
+    return {
+      default: () => <div className="error">Component is not available!</div>,
+    };
+  })
+);
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -179,7 +212,6 @@ function App() {
 
   return (
     // В компонент App внедрён контекст через CurrentUserContext.Provider
-
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page__content">
         <Header email={email} onSignOut={onSignOut} />
@@ -197,36 +229,44 @@ function App() {
             onCardDelete={handleCardDelete}
             loggedIn={isLoggedIn}
           />
-          <Route path="/signup">
-            <Register onRegister={onRegister} />
-          </Route>
-          <Route path="/signin">
-            <Login onLogin={onLogin} />
-          </Route>
+          <Suspense fallback={<div>Загрузка...</div>}>
+            <Route path="/signup">
+              <Register onRegister={onRegister} />
+            </Route>
+            <Route path="/signin">
+              <Login onLogin={onLogin} />
+            </Route>
+          </Suspense>
         </Switch>
         <Footer />
-        <EditProfilePopup
-          isOpen={isEditProfilePopupOpen}
-          onUpdateUser={handleUpdateUser}
-          onClose={closeAllPopups}
-        />
-        <AddPlacePopup
-          isOpen={isAddPlacePopupOpen}
-          onAddPlace={handleAddPlaceSubmit}
-          onClose={closeAllPopups}
-        />
-        <PopupWithForm title="Вы уверены?" name="remove-card" buttonText="Да" />
-        <EditAvatarPopup
-          isOpen={isEditAvatarPopupOpen}
-          onUpdateAvatar={handleUpdateAvatar}
-          onClose={closeAllPopups}
-        />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-        <InfoTooltip
-          isOpen={isInfoToolTipOpen}
-          onClose={closeAllPopups}
-          status={tooltipStatus}
-        />
+        <Suspense fallback={<div>Загрузка...</div>}>
+          <EditProfilePopup
+            isOpen={isEditProfilePopupOpen}
+            onUpdateUser={handleUpdateUser}
+            onClose={closeAllPopups}
+          />
+          <AddPlacePopup
+            isOpen={isAddPlacePopupOpen}
+            onAddPlace={handleAddPlaceSubmit}
+            onClose={closeAllPopups}
+          />
+          <PopupWithForm
+            title="Вы уверены?"
+            name="remove-card"
+            buttonText="Да"
+          />
+          <EditAvatarPopup
+            isOpen={isEditAvatarPopupOpen}
+            onUpdateAvatar={handleUpdateAvatar}
+            onClose={closeAllPopups}
+          />
+          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+          <InfoTooltip
+            isOpen={isInfoToolTipOpen}
+            onClose={closeAllPopups}
+            status={tooltipStatus}
+          />
+        </Suspense>
       </div>
     </CurrentUserContext.Provider>
   );
